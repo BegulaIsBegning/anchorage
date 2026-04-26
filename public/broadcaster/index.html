@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Broadcast Console</title>
+  <title>Anchorage Panel</title>
   <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
@@ -11,14 +11,14 @@
 
   <div class="topbar">
     <div>
-      <h1>BROADCAST CONSOLE</h1>
-      <div class="topbar-sub">SISTEMA DE TRANSMISSÃO AO VIVO</div>
+      <h1>Broadcasting Panel</h1>
+      <div class="topbar-sub">Live-transmission system</div>
     </div>
     <div class="topbar-right">
       <span class="clock" id="clockDisplay">--:--:--</span>
       <span class="live-badge off" id="liveBadge">
         <span class="live-dot"></span>
-        <span id="liveBadgeText">FORA DO AR</span>
+        <span id="liveBadgeText">You're not broadcasting!</span>
       </span>
     </div>
   </div>
@@ -28,15 +28,15 @@
     <!-- LEFT -->
     <div>
       <div class="preview-box">
-        <div class="section-label">MONITOR DE SAÍDA</div>
+        <div class="section-label">Output</div>
         <div class="canvas-wrap">
           <canvas id="outCanvas" width="1280" height="720"></canvas>
           <video id="camVideo" playsinline muted></video>
-          <div class="src-badge" id="sourceBadge">SEM FONTE</div>
+          <div class="src-badge" id="sourceBadge">No video is being shown</div>
         </div>
         <div class="preview-meta">
-          <span>ESPECTADORES: <span id="viewersCount">0</span></span>
-          <span id="channelDisplay">CANAL: —</span>
+          <span>Watching now: <span id="viewersCount">0</span></span>
+          <span id="channelDisplay">Channel: —</span>
         </div>
       </div>
 
@@ -48,12 +48,12 @@
       <div class="ledbar-wrap"><div id="ledbar"></div></div>
 
       <div class="go-live-box">
-        <div class="section-label">TRANSMISSÃO</div>
-        <label>ID DO CANAL</label>
-        <input type="text" id="channelId" placeholder="ex: noticias-ao-vivo" maxlength="64"/>
+        <div class="section-label">Broadcasting</div>
+        <label>Channel ID</label>
+        <input type="text" id="channelId" placeholder="ex: Arcadia-News" maxlength="64"/>
         <div class="btn-row">
-          <button class="btn-go"   id="btnGoLive">▶ IR AO VIVO</button>
-          <button class="btn-stop" id="btnStop" disabled>■ ENCERRAR</button>
+          <button class="btn-go"   id="btnGoLive">▶ Go Live!</button>
+          <button class="btn-stop" id="btnStop" disabled>■ Stop!</button>
         </div>
       </div>
     </div>
@@ -63,17 +63,17 @@
 
       <!-- SOURCE -->
       <div class="card">
-        <div class="card-title"><span class="ctdot" style="background:var(--blue)"></span>FONTE DE VÍDEO</div>
+        <div class="card-title"><span class="ctdot" style="background:var(--blue)"></span>Video Font!</div>
         <div class="src-tabs">
-          <button class="src-tab active" id="srcFile" onclick="selectSource('file')">📁 ARQUIVO</button>
-          <button class="src-tab"        id="srcCam"  onclick="selectSource('cam')">📷 CÂMERA</button>
+          <button class="src-tab active" id="srcFile" onclick="selectSource('file')">📁 Archive</button>
+          <button class="src-tab"        id="srcCam"  onclick="selectSource('cam')"> Webcam (not recommended)</button>
         </div>
 
         <div id="fileSourcePanel">
           <input type="file" id="videoFiles" accept="video/*" multiple style="display:none"/>
           <div class="btn-row" style="margin-top:0">
-            <button class="btn-blue"  id="btnAddVideos">+ ADICIONAR</button>
-            <button class="btn-ghost" id="btnClearPlaylist">✕ LIMPAR</button>
+            <button class="btn-blue"  id="btnAddVideos">+ Add</button>
+            <button class="btn-ghost" id="btnClearPlaylist">✕ Clear</button>
           </div>
           <div class="playlist" id="playlist" style="margin-top:8px"></div>
           <div class="seek-wrap">
@@ -85,91 +85,91 @@
           </div>
           <div class="pb-row">
             <button class="btn-blue" id="btnPrevVideo">⏮</button>
-            <button class="btn-blue" id="btnPlayPause">▶ PLAY</button>
+            <button class="btn-blue" id="btnPlayPause">▶ Play</button>
             <button class="btn-blue" id="btnNextVideo">⏭</button>
-            <label class="chk"><input type="checkbox" id="loopPlaylist" checked/> LOOP</label>
+            <label class="chk"><input type="checkbox" id="loopPlaylist" checked/> Loop</label>
           </div>
         </div>
 
         <div id="camSourcePanel" style="display:none">
-          <label>CÂMERA</label>
+          <label>Camera</label>
           <select id="camSelect"></select>
           <div class="btn-row">
-            <button class="btn-blue" id="btnRefreshCam" style="width:100%">↺ ATUALIZAR</button>
+            <button class="btn-blue" id="btnRefreshCam" style="width:100%">↺ Update</button>
           </div>
         </div>
       </div>
 
       <!-- MIXER -->
       <div class="card">
-        <div class="card-title"><span class="ctdot" style="background:var(--green)"></span>MIXER</div>
+        <div class="card-title"><span class="ctdot" style="background:var(--green)"></span>Mixer</div>
 
-        <label>VOLUME MIC &nbsp;<span id="micVal">100</span>%</label>
+        <label>Mic Volume &nbsp;<span id="micVal">100</span>%</label>
         <div class="rrow"><input type="range" id="micGain" min="0" max="200" value="100"/><span class="rval" id="micValRight">100%</span></div>
 
-        <label>BRILHO &nbsp;<span id="brightVal">100</span>%</label>
+        <label>Brightness &nbsp;<span id="brightVal">100</span>%</label>
         <div class="rrow"><input type="range" id="videoBright" min="40" max="160" value="100"/><span class="rval" id="brightValRight">100%</span></div>
 
-        <label>CONTRASTE &nbsp;<span id="contrastVal">100</span>%</label>
+        <label>Contrast &nbsp;<span id="contrastVal">100</span>%</label>
         <div class="rrow"><input type="range" id="videoContrast" min="50" max="200" value="100"/><span class="rval" id="contrastValRight">100%</span></div>
 
-        <label>SATURAÇÃO &nbsp;<span id="satVal">100</span>%</label>
+        <label>Saturation &nbsp;<span id="satVal">100</span>%</label>
         <div class="rrow"><input type="range" id="videoSat" min="0" max="200" value="100"/><span class="rval" id="satValRight">100%</span></div>
 
-        <label class="chk"><input type="checkbox" id="muteMic"/> MICROFONE MUDO</label>
-        <label class="chk"><input type="checkbox" id="muteVideoAudio"/> ÁUDIO DO VÍDEO MUDO</label>
+        <label class="chk"><input type="checkbox" id="muteMic"/> Mute Microphone</label>
+        <label class="chk"><input type="checkbox" id="muteVideoAudio"/> Shut video sound up</label>
       </div>
 
       <!-- GRAFISMO -->
       <div class="card">
-        <div class="card-title"><span class="ctdot" style="background:var(--amber)"></span>GRAFISMO</div>
+        <div class="card-title"><span class="ctdot" style="background:var(--amber)"></span>Graphs</div>
 
-        <label class="chk"><input type="checkbox" id="showLiveTag" checked/> SELO "AO VIVO"</label>
-        <label class="chk"><input type="checkbox" id="showDateTime"/> DATA / HORA NA TELA</label>
+        <label class="chk"><input type="checkbox" id="showLiveTag" checked/> Live Marcation </label>
+        <label class="chk"><input type="checkbox" id="showDateTime"/> Date & Hour Marcation</label>
 
-        <label style="margin-top:8px">TEXTO NA TELA</label>
-        <input type="text" id="screenText" placeholder="Título ou aviso..." maxlength="120"/>
-        <label>POSIÇÃO</label>
+        <label style="margin-top:8px">On-Screen Text</label>
+        <input type="text" id="screenText" placeholder="[Insert something!]" maxlength="120"/>
+        <label>Position</label>
         <select id="screenTextPos">
-          <option value="top">Topo</option>
-          <option value="center">Centro</option>
-          <option value="bottom">Rodapé</option>
+          <option value="top">Top</option>
+          <option value="center">Center</option>
+          <option value="bottom">Close to ticker</option>
         </select>
 
-        <label style="margin-top:8px">TICKER ROLANTE</label>
-        <label class="chk"><input type="checkbox" id="tickerOn"/> ATIVAR</label>
-        <input type="text" id="tickerText" placeholder="Texto do ticker..." maxlength="400" style="margin-top:4px"/>
-        <label>VELOCIDADE</label>
+        <label style="margin-top:8px">Ticker</label>
+        <label class="chk"><input type="checkbox" id="tickerOn"/> Activate</label>
+        <input type="text" id="tickerText" placeholder="Did you already breathe today?" maxlength="4000" style="margin-top:4px"/>
+        <label>Velocity</label>
         <div class="rrow"><input type="range" id="tickerSpeed" min="1" max="10" value="4"/><span class="rval" id="tickerSpeedVal">4</span></div>
       </div>
 
       <!-- OVERLAY -->
       <div class="card">
-        <div class="card-title"><span class="ctdot" style="background:var(--blue)"></span>LOGOTIPO / OVERLAY</div>
+        <div class="card-title"><span class="ctdot" style="background:var(--blue)"></span>Overlay</div>
         <input type="file" id="overlayFile" accept="image/*"/>
-        <label>OPACIDADE &nbsp;<span id="overlayOpVal">80</span>%</label>
+        <label>Opcaity &nbsp;<span id="overlayOpVal">80</span>%</label>
         <div class="rrow"><input type="range" id="overlayOpacity" min="0" max="100" value="80"/><span class="rval" id="overlayOpRight">80%</span></div>
-        <label>POSIÇÃO</label>
+        <label>Position</label>
         <select id="overlayPos">
-          <option value="br">Inferior direito</option>
-          <option value="bl">Inferior esquerdo</option>
-          <option value="tr">Superior direito</option>
-          <option value="tl">Superior esquerdo</option>
-          <option value="fill">Tela cheia</option>
+          <option value="br">Down Right</option>
+          <option value="bl">Down Left</option>
+          <option value="tr">Upper Right</option>
+          <option value="tl">Upper Left</option>
+          <option value="fill">Fullscreen</option>
         </select>
-        <div class="btn-row"><button class="btn-ghost" id="btnClearOverlay">✕ REMOVER</button></div>
+        <div class="btn-row"><button class="btn-ghost" id="btnClearOverlay">✕ Remove</button></div>
       </div>
 
       <!-- URGENT -->
       <div class="card urgent-card">
-        <div class="card-title"><span class="ctdot" style="background:var(--red)"></span>ALERTA URGENTE</div>
+        <div class="card-title"><span class="ctdot" style="background:var(--red)"></span>Temporary Overlay</div>
         <input type="file" id="urgentFile" accept="image/*"/>
-        <label>DURAÇÃO (s)</label>
+        <label>Duration (s)</label>
         <input type="number" id="urgentDuration" value="5" min="1" max="30" style="width:70px"/>
         <div class="btn-row">
-          <button class="btn-warn" id="btnUrgent" disabled>⚡ DISPARAR</button>
+          <button class="btn-warn" id="btnUrgent" disabled>Show now</button>
         </div>
-        <p class="hint">Cobre a tela pelo tempo definido.</p>
+        <p class="hint">Fullscreen temporary overlay. generaly used for announcements</p>
       </div>
 
     </div>
