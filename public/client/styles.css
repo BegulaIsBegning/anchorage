@@ -206,18 +206,6 @@ input.seek { width: 100%; accent-color: var(--green); height: 4px; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); flex-shrink: 0; }
 .status-dot.live { background: var(--green); box-shadow: 0 0 8px var(--glow-rx); }
 
-/* ── SCENE / SVG CONTAINER ── */
-.scene { 
-  background: var(--s1); 
-  border-radius: 8px; 
-  overflow: hidden; 
-  margin-bottom: 20px; 
-  border: 1px solid var(--border);
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
-  padding: 10px;
-}
-.scene svg { display: block; width: 100%; height: auto; }
-
 /* ── CHANNELS LIST ── */
 .ch-label { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 12px; font-weight: 500; text-transform: uppercase; }
 .ch-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
@@ -233,82 +221,102 @@ input.seek { width: 100%; accent-color: var(--green); height: 4px; }
 .ch-num { color: var(--muted); font-size: 12px; font-family: var(--mono); min-width: 32px; }
 .no-ch { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; border: 1px dashed var(--border2); border-radius: 6px; }
 
-/* ── BREATHTAKING DATA STREAM ANIMATIONS ── */
+/* ── MULTI-CHANNEL PREVIEW GRID ── */
 
-/* 1. Transmission LED - Vibrant Pulse */
-.tx-led { 
-  fill: var(--amber); 
-  animation: tx-glow 1.5s ease-in-out infinite alternate; 
-}
-@keyframes tx-glow {
-  0% { opacity: 0.6; filter: drop-shadow(0 0 2px var(--amber)); }
-  100% { opacity: 1; filter: drop-shadow(0 0 15px var(--amber)); }
+/* 1. Kill all previous signal animations */
+.wave, .wave-in, .air-line, .tx-led, .rx-led, .ticker-wrap {
+  display: none !important;
+  animation: none !important;
 }
 
-/* 2. Arc Data Flow - Packets moving along the parabolic path */
-.wave { 
-  stroke: var(--amber); 
-  stroke-width: 2px;
-  stroke-linecap: round;
-  /* Creates the "dashed" packet look from the image */
-  stroke-dasharray: 5 25; 
-  animation: data-flow 2s linear infinite;
-  filter: drop-shadow(0 0 8px var(--glow-tx));
+/* 2. Transform the Scene into a Control Room Grid */
+.scene {
+  background: var(--bg);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid var(--border);
+  max-height: 400px;
+  overflow-y: auto;
 }
 
-@keyframes data-flow { 
-  from { stroke-dashoffset: 100; }
-  to { stroke-dashoffset: 0; }
+/* 3. Individual Channel Preview Screens */
+.mini-screen {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #000;
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
 }
 
-/* 3. Receiver Signal Capture - Blue packets "entering" the house */
-.wave-in { 
-  stroke: var(--green); 
-  stroke-width: 2px;
-  stroke-linecap: round;
-  stroke-dasharray: 4 12; 
-  animation: data-receive 1s linear infinite;
-  filter: drop-shadow(0 0 5px var(--glow-rx));
+.mini-screen:hover {
+  border-color: var(--amber);
 }
 
-@keyframes data-receive { 
-  from { stroke-dashoffset: 40; }
-  to { stroke-dashoffset: 0; }
+.mini-screen video, .mini-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6; /* Dimmer for that "monitored" look */
 }
 
-/* 4. Receiver LED - Solid Sync */
-.rx-led { 
-  fill: var(--green); 
-  animation: rx-glow 0.8s ease-in-out infinite alternate; 
-}
-@keyframes rx-glow {
-  0% { opacity: 0.4; }
-  100% { opacity: 1; filter: drop-shadow(0 0 12px var(--green)); }
-}
-
-/* 5. Background Star/Data Noise - Tiny drifting particles */
-.air-line { 
-  stroke: rgba(255, 255, 255, 0.05); 
-  stroke-width: 1px;
-  stroke-dasharray: 1 50;
-  animation: drift 10s linear infinite; 
-}
-@keyframes drift { 
-  from { stroke-dashoffset: 200; }
-  to { stroke-dashoffset: 0; } 
+/* 4. Scrolling Metadata Labels (Anchorage, Broadcasting, etc.) */
+.screen-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 4px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* 6. Building Windows - Subtle toggling */
-.win-a, .win-b { fill: #1a1a1a; transition: fill 0.5s ease; }
-.win-active { fill: #2a4a3a; filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.2)); }
-
-/* 7. Scene Depth & Glow - Adding environmental atmosphere to the SVG */
-.scene svg g[id*="glow"] {
-  filter: blur(20px);
-  opacity: 0.15;
-  mix-blend-mode: screen;
+.scrolling-meta {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--green);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds '...' if text is too long */
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
+/* Subtle "scanline" effect for the monitors */
+.mini-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.1) 50%
+  ), 
+  linear-gradient(
+    90deg, 
+    rgba(255, 0, 0, 0.02), 
+    rgba(0, 255, 0, 0.01), 
+    rgba(0, 0, 255, 0.02)
+  );
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+/* 5. Channel Status Indicators */
+.status-tag {
+  font-family: var(--mono);
+  font-size: 7px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.status-live { background: rgba(0, 229, 255, 0.1); color: var(--green); }
+.status-idle { background: rgba(255, 255, 255, 0.05); color: var(--muted); }
 /* ── INTERACTION & UTILITY ── */
 
 /* Custom Scrollbar for a premium "app" feel */
