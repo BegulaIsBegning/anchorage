@@ -22,20 +22,49 @@ function setStatus(live, msg) {
 }
 
 function renderChannels() {
-  const el = $("channelList");
-  el.innerHTML = "";
-  if (!channels.length) { $("noChannels").classList.remove("hidden"); return; }
+  const listEl = $("channelList");
+  const gridEl = $("channelGrid"); // The .scene div
+  
+  listEl.innerHTML = "";
+  gridEl.innerHTML = ""; // Clear the grid for fresh previews
+
+  if (!channels.length) { 
+    $("noChannels").classList.remove("hidden"); 
+    return; 
+  }
+  
   $("noChannels").classList.add("hidden");
+
   channels.forEach((id, i) => {
+    const chNum = String(i + 1).padStart(2, "0");
+
+    // --- 1. Update the List (Bottom part) ---
     const li = document.createElement("li");
     const btn = document.createElement("button");
-    btn.innerHTML = `<span class="ch-dot"></span><span class="ch-num">CH ${String(i+1).padStart(2,"0")}</span>${id}`;
+    btn.innerHTML = `<span class="ch-dot"></span><span class="ch-num">CH ${chNum}</span>${id}`;
     btn.onclick = () => tuneChannel(id);
     li.appendChild(btn);
-    el.appendChild(li);
+    listEl.appendChild(li);
+
+    // --- 2. Update the Preview Grid (The small screens) ---
+    const preview = document.createElement("div");
+    preview.className = "mini-screen";
+    preview.onclick = () => tuneChannel(id); // Clicking the screen also tunes it
+    
+    preview.innerHTML = `
+      <div class="screen-label">
+        <span class="scrolling-meta">CH ${chNum} // ${id.toUpperCase()}</span>
+        <span class="status-tag">LIVE</span>
+      </div>
+      <div class="preview-placeholder"></div> 
+    `;
+    // Note: To show ACTUAL live video in the preview, you'd need a separate 
+    // WebRTC connection for every channel, which is heavy. 
+    // For now, this creates the professional grid UI.
+
+    gridEl.appendChild(preview);
   });
 }
-
 socket.on("channels-updated", list => { channels = Array.isArray(list)?list:[]; renderChannels(); });
 socket.on("viewer-error", ({message}) => { alert(message||"Erro"); showScan(); });
 socket.on("broadcaster-left", () => {
