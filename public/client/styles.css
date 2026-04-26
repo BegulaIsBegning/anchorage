@@ -233,79 +233,74 @@ input.seek { width: 100%; accent-color: var(--green); height: 4px; }
 .ch-num { color: var(--muted); font-size: 12px; font-family: var(--mono); min-width: 32px; }
 .no-ch { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; border: 1px dashed var(--border2); border-radius: 6px; }
 
-/* ── BREATHTAKING SVG ANIMATIONS ── */
+/* ── BREATHTAKING DATA STREAM ANIMATIONS ── */
 
-/* 1. Transmission LED - Smooth Breathing Pulse */
-.tx-led { fill: var(--amber); animation: tx-glow 2s ease-in-out infinite alternate; }
+/* 1. Transmission LED - Vibrant Pulse */
+.tx-led { 
+  fill: var(--amber); 
+  animation: tx-glow 1.5s ease-in-out infinite alternate; 
+}
 @keyframes tx-glow {
-  0% { opacity: 0.4; filter: drop-shadow(0 0 2px var(--amber)); }
-  100% { opacity: 1; filter: drop-shadow(0 0 12px var(--amber)); }
+  0% { opacity: 0.6; filter: drop-shadow(0 0 2px var(--amber)); }
+  100% { opacity: 1; filter: drop-shadow(0 0 15px var(--amber)); }
 }
 
-/* 2. Outbound Radio Waves - Continuous, elegant propagation out from the source */
+/* 2. Arc Data Flow - Packets moving along the parabolic path */
 .wave { 
   stroke: var(--amber); 
   stroke-width: 2px;
   stroke-linecap: round;
-  stroke-dasharray: 8 24; /* Beautiful dashed data pattern */
-  animation: wave-propagate 1.5s linear infinite;
-  filter: drop-shadow(0 0 6px var(--glow-tx));
-  opacity: 0.8;
-}
-/* Staggering the inner/outer waves if they share the class */
-.w2 { animation-delay: 0.2s; opacity: 0.6; } 
-.w3 { animation-delay: 0.4s; opacity: 0.4; } 
-.w4 { animation-delay: 0.6s; opacity: 0.2; } 
-.w5 { animation-delay: 0.8s; opacity: 0.1; }
-
-@keyframes wave-propagate { 
-  0% { stroke-dashoffset: 32; } /* Moving outward continuously */
-  100% { stroke-dashoffset: 0; }
+  /* Creates the "dashed" packet look from the image */
+  stroke-dasharray: 5 25; 
+  animation: data-flow 2s linear infinite;
+  filter: drop-shadow(0 0 8px var(--glow-tx));
 }
 
-/* 3. Inbound Radio Waves - Smooth drawing toward the receiver */
+@keyframes data-flow { 
+  from { stroke-dashoffset: 100; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* 3. Receiver Signal Capture - Blue packets "entering" the house */
 .wave-in { 
   stroke: var(--green); 
   stroke-width: 2px;
   stroke-linecap: round;
-  stroke-dasharray: 4 16; 
-  animation: wave-receive 1.2s linear infinite;
-  filter: drop-shadow(0 0 6px var(--glow-rx));
-}
-.wi2 { opacity: 0.7; animation-delay: 0.1s; } 
-.wi3 { opacity: 0.4; animation-delay: 0.2s; }
-
-@keyframes wave-receive { 
-  0% { stroke-dashoffset: 0; } 
-  100% { stroke-dashoffset: 20; } /* Moving inward continuously */
+  stroke-dasharray: 4 12; 
+  animation: data-receive 1s linear infinite;
+  filter: drop-shadow(0 0 5px var(--glow-rx));
 }
 
-/* 4. Receiver LED - Syncs with inbound data */
-.rx-led { fill: var(--green); animation: rx-glow 1.2s ease-in-out infinite alternate; }
+@keyframes data-receive { 
+  from { stroke-dashoffset: 40; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* 4. Receiver LED - Solid Sync */
+.rx-led { 
+  fill: var(--green); 
+  animation: rx-glow 0.8s ease-in-out infinite alternate; 
+}
 @keyframes rx-glow {
-  0% { opacity: 0.2; }
-  100% { opacity: 1; filter: drop-shadow(0 0 10px var(--green)); }
+  0% { opacity: 0.4; }
+  100% { opacity: 1; filter: drop-shadow(0 0 12px var(--green)); }
 }
 
-/* 5. Air-line / Data Stream - Sleek subtle background data movement */
+/* 5. Background Star/Data Noise - Tiny drifting particles */
 .air-line { 
-  stroke: rgba(255, 255, 255, 0.1); 
+  stroke: rgba(255, 255, 255, 0.05); 
   stroke-width: 1px;
-  stroke-dasharray: 4 12;
-  animation: stream-flow 4s linear infinite; 
+  stroke-dasharray: 1 50;
+  animation: drift 10s linear infinite; 
 }
-@keyframes stream-flow { 
-  to { stroke-dashoffset: -160; } 
+@keyframes drift { 
+  from { stroke-dashoffset: 200; }
+  to { stroke-dashoffset: 0; } 
 }
 
-/* 6. House Windows - Realistic, cozy, warm light turning on and off gently */
-.win-a, .win-b { fill: #ffe0b2; filter: drop-shadow(0 0 8px rgba(255, 224, 178, 0.4)); }
-.win-a { animation: window-light 8s ease-in-out infinite; }
-.win-b { animation: window-light 12s 3s ease-in-out infinite; }
-@keyframes window-light { 
-  0%, 40%, 100% { opacity: 1; } 
-  45%, 95% { opacity: 0.1; filter: none; } 
-}
+/* 6. Building Windows - Subtle toggling */
+.win-a, .win-b { fill: #1a1a1a; transition: fill 0.5s ease; }
+.win-active { fill: #2a4a3a; filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.2)); }
 
 /* 7. Scene Depth & Glow - Adding environmental atmosphere to the SVG */
 .scene svg g[id*="glow"] {
