@@ -39,9 +39,9 @@ function renderChannels() {
 socket.on("channels-updated", list => { channels = Array.isArray(list)?list:[]; renderChannels(); });
 socket.on("viewer-error", ({message}) => { alert(message||"Erro"); showScan(); });
 socket.on("broadcaster-left", () => {
-  $("tvOverlayMsg").textContent = "TRANSMISSÃO ENCERRADA";
+  $("tvOverlayMsg").textContent = "End of transmission or lost signal";
   $("tvOverlay").classList.remove("hidden");
-  setStatus(false, "SINAL PERDIDO");
+  setStatus(false, "Lost Signal");
   if (mediaStream) { mediaStream.getTracks().forEach(t=>t.stop()); mediaStream=null; }
   $("tvVideo").srcObject = null;
   teardown();
@@ -59,7 +59,7 @@ function showScan() {
   $("tvVideo").srcObject=null;
   $("scanSection").classList.remove("hidden");
   $("tvSection").classList.add("hidden");
-  setStatus(false,"AGUARDANDO...");
+  setStatus(false,"Waiting...");
 }
 
 function showTV(ch) {
@@ -67,7 +67,7 @@ function showTV(ch) {
   $("tvSection").classList.remove("hidden");
   $("tunedChannel").textContent = "▸ "+ch.toUpperCase();
   $("tvOverlay").classList.add("hidden");
-  setStatus(false,"CONECTANDO...");
+  setStatus(false,"Connecting...");
 }
 
 socket.on("signal", async ({from, data}) => {
@@ -105,17 +105,17 @@ async function tuneChannel(ch) {
     mediaStream.addTrack(ev.track);
     $("tvOverlay").classList.add("hidden");
     $("tvVideo").play().catch(()=>{});
-    setStatus(true,"AO VIVO · "+ch.toUpperCase());
+    setStatus(true,"Live · "+ch.toUpperCase());
   };
 
   pc.oniceconnectionstatechange = () => {
     if (!pc) return;
     if (pc.iceConnectionState==="failed") {
-      $("tvOverlayMsg").textContent="FALHA NA CONEXÃO";
+      $("tvOverlayMsg").textContent="Something went wrong. (code 1)";
       $("tvOverlay").classList.remove("hidden");
-      setStatus(false,"ERRO DE CONEXÃO");
+      setStatus(false,"Something went really wrong (code 2)");
     } else if (pc.iceConnectionState==="disconnected") {
-      setStatus(false,"SINAL INSTÁVEL...");
+      setStatus(false,"Unstable Signal!");
     }
   };
 
