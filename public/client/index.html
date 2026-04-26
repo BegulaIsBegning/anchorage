@@ -19,105 +19,32 @@
     <div class="topbar-clock" id="clockDisplay">--:--:--</div>
   </div>
 
-  <!-- SCAN -->
+  <!-- SCAN SECTION -->
   <section id="scanSection">
-
-    <div class="scene">
-      <svg viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg">
-        <!-- sky -->
-        <rect width="860" height="240" fill="#040804"/>
-        <!-- ground -->
-        <path d="M0 230 Q430 215 860 230 L860 300 L0 300Z" fill="#030603"/>
-
-        <!-- stars -->
-        <g fill="#fff" opacity=".18">
-          <circle cx="50"  cy="18" r=".9"/><circle cx="130" cy="35" r=".7"/><circle cx="270" cy="14" r="1"/>
-          <circle cx="420" cy="30" r=".8"/><circle cx="560" cy="10" r=".9"/><circle cx="700" cy="24" r=".7"/>
-          <circle cx="790" cy="40" r="1"/><circle cx="185" cy="50" r=".6"/><circle cx="650" cy="52" r=".8"/>
-          <circle cx="340" cy="6"  r=".7"/><circle cx="820" cy="14" r=".7"/><circle cx="480" cy="46" r=".9"/>
-        </g>
-
-        <!-- TOWER -->
-        <!-- building -->
-        <rect x="100" y="110" width="96" height="120" fill="#0a120a" stroke="#152015" stroke-width=".5" rx="2"/>
-        <!-- windows -->
-        <g fill="rgba(0,230,118,.1)" stroke="rgba(0,230,118,.18)" stroke-width=".5">
-          <rect x="112" y="124" width="18" height="22" rx="1"/>
-          <rect x="138" y="124" width="18" height="22" rx="1"/>
-          <rect x="164" y="124" width="18" height="22" rx="1"/>
-          <rect x="112" y="158" width="18" height="22" rx="1"/>
-          <rect x="138" y="158" width="18" height="22" rx="1"/>
-          <rect x="164" y="158" width="18" height="22" rx="1"/>
-        </g>
-        <rect x="112" y="124" width="18" height="22" rx="1" fill="rgba(0,230,118,.2)" class="win-a"/>
-        <rect x="164" y="158" width="18" height="22" rx="1" fill="rgba(0,230,118,.2)" class="win-b"/>
-        <!-- mast base box -->
-        <rect x="134" y="90" width="28" height="24" fill="#0c150c" stroke="#152015" stroke-width=".5"/>
-        <!-- mast pole -->
-        <rect x="146" y="32" width="5" height="60" fill="#162416"/>
-        <!-- cross struts -->
-        <line x1="126" y1="72" x2="171" y2="72" stroke="#162416" stroke-width="1"/>
-        <line x1="130" y1="56" x2="167" y2="56" stroke="#162416" stroke-width="1"/>
-        <line x1="134" y1="44" x2="163" y2="44" stroke="#162416" stroke-width="1"/>
-        <!-- diagonals -->
-        <line x1="126" y1="72" x2="148" y2="32" stroke="#111e11" stroke-width=".8"/>
-        <line x1="171" y1="72" x2="150" y2="32" stroke="#111e11" stroke-width=".8"/>
-        <!-- antenna tip -->
-        <circle cx="148" cy="30" r="5" fill="#ff3030" class="tx-led"/>
-        <circle cx="148" cy="30" r="9" fill="none" stroke="#ff3030" stroke-width=".8" opacity=".3" class="tx-led"/>
-
-        <!-- WAVES from tower -->
-        <g fill="none" stroke="#00e676" stroke-linecap="round">
-          <path class="wave w1" d="M148 30 A50 50 0 0 1 248 30"  stroke-width="1.8" opacity=".8"/>
-          <path class="wave w2" d="M148 30 A95 95 0 0 1 338 30"  stroke-width="1.5" opacity=".6"/>
-          <path class="wave w3" d="M148 30 A148 148 0 0 1 444 30" stroke-width="1.2" opacity=".45"/>
-          <path class="wave w4" d="M148 30 A210 210 0 0 1 568 30" stroke-width="1"   opacity=".3"/>
-          <path class="wave w5" d="M148 30 A280 280 0 0 1 708 30" stroke-width=".8"  opacity=".18"/>
-        </g>
-
-        <!-- signal line -->
-        <path d="M154 33 Q520 10 718 158" fill="none" stroke="rgba(0,230,118,.06)" stroke-width="1.5" stroke-dasharray="7 16" class="air-line"/>
-
-        <!-- HOUSE -->
-        <g transform="translate(644,128)">
-          <!-- body -->
-          <rect x="0" y="52" width="88" height="68" fill="#080e08" stroke="#152015" stroke-width=".5" rx="2"/>
-          <!-- roof -->
-          <polygon points="-6,54 44,10 98,54" fill="#060c06" stroke="#152015" stroke-width=".5"/>
-          <!-- door -->
-          <rect x="30" y="86" width="26" height="34" fill="#040804" rx="1" stroke="#152015" stroke-width=".5"/>
-          <!-- window lit -->
-          <rect x="6"  y="66" width="24" height="16" rx="1" fill="#040804" stroke="#152015" stroke-width=".5"/>
-          <rect x="58" y="66" width="24" height="16" rx="1" fill="rgba(0,230,118,.12)" stroke="rgba(0,230,118,.22)" stroke-width=".5"/>
-          <!-- chimney -->
-          <rect x="62" y="22" width="12" height="18" fill="#080e08" stroke="#152015" stroke-width=".5"/>
-          <!-- rooftop antenna -->
-          <line x1="18" y1="53" x2="18" y2="16" stroke="#162416" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="6"  y1="28" x2="30" y2="28" stroke="#162416" stroke-width="1.2"/>
-          <line x1="6"  y1="21" x2="30" y2="21" stroke="#162416" stroke-width="1.2"/>
-          <line x1="6"  y1="14" x2="30" y2="14" stroke="#162416" stroke-width="1.2"/>
-          <circle cx="18" cy="13" r="3.5" fill="#00e676" class="rx-led"/>
-        </g>
-
-        <!-- waves arriving at house -->
-        <g fill="none" stroke="#00e676" stroke-linecap="round">
-          <path class="wave-in wi1" d="M700 141 A32 32 0 0 0 644 141" stroke-width="1.5" opacity=".7"/>
-          <path class="wave-in wi2" d="M700 141 A60 60 0 0 0 604 141" stroke-width="1.2" opacity=".5"/>
-          <path class="wave-in wi3" d="M700 141 A94 94 0 0 0 562 141" stroke-width=".9"  opacity=".3"/>
-        </g>
-
-        <!-- labels -->
-        <text x="148" y="258" text-anchor="middle" font-family="Courier New,monospace" font-size="8" fill="#1a2e1a" letter-spacing=".14em">EMISSORA</text>
-        <text x="688" y="258" text-anchor="middle" font-family="Courier New,monospace" font-size="8" fill="#1a2e1a" letter-spacing=".14em">RECEPTOR</text>
-      </svg>
+    <!-- Channel Preview Grid -->
+    <div class="scene" id="channelGrid">
+      <!-- Logic in app.js will populate this. Static examples below: -->
+      <div class="mini-screen">
+        <div class="screen-label">
+          <span class="scrolling-meta">CH-01 // SIGNAL_STABLE</span>
+          <span class="status-tag">LIVE</span>
+        </div>
+      </div>
+      
+      <div class="mini-screen">
+        <div class="screen-label">
+          <span class="scrolling-meta">CH-02 // SIGNAL_LOST</span>
+          <span class="status-tag" style="color: var(--red); border-color: var(--red);">OFFLINE</span>
+        </div>
+      </div>
     </div>
 
-    <div class="ch-label">▸ Disponible Channels</div>
+    <div class="ch-label" style="margin-top: 24px;">▸ Available Channels</div>
     <ul id="channelList" class="ch-list"></ul>
     <p id="noChannels" class="no-ch hidden">Waiting for signals.</p>
   </section>
 
-  <!-- TV -->
+  <!-- TV SECTION -->
   <section id="tvSection" class="hidden">
     <div class="tv-wrap">
       <div class="tv-bezel">
@@ -151,7 +78,8 @@
     </div>
   </section>
 
-</div>
+</div> <!-- End of .app -->
+
 <script src="/socket.io/socket.io.js"></script>
 <script src="app.js"></script>
 </body>
