@@ -60,7 +60,7 @@ function updateVU() {
 // ─── LIVE UI ──────────────────────────────────────────────────────────────────
 function setLiveUI(on) {
   $("liveBadge").className="live-badge "+(on?"on":"off");
-  $("liveBadgeText").textContent=on?"NO AR":"FORA DO AR";
+  $("liveBadgeText").textContent=on?"On air":"Radio towers off!";
   $("btnGoLive").disabled=on; $("btnStop").disabled=!on; $("channelId").disabled=on;
   $("channelDisplay").textContent="CANAL: "+(on?channelId.toUpperCase():"—");
 }
@@ -92,7 +92,7 @@ function fmtTime(s){
 
 function renderPlaylist() {
   const el=$("playlist");
-  if(!playlist.length){el.innerHTML='<div class="pl-empty">Nenhum vídeo. Clique em + ADICIONAR.</div>';return;}
+  if(!playlist.length){el.innerHTML='<div class="pl-empty">No sources.</div>';return;}
   el.innerHTML=playlist.map((item,i)=>`
     <div class="pl-item${i===currentIdx?" playing":""}" data-i="${i}">
       <span class="pl-ic">${i===currentIdx?"▶":"○"}</span>
@@ -165,24 +165,24 @@ function switchToIdx(idx) {
     if(next<playlist.length){switchToIdx(next);activeVid.play().catch(()=>{});}
     else if($("loopPlaylist").checked){switchToIdx(0);playlist[0].vid.play().catch(()=>{});}
   };
-  if(live){activeVid.play().catch(()=>{});$("btnPlayPause").textContent="⏸ PAUSE";}
+  if(live){activeVid.play().catch(()=>{});$("btnPlayPause").textContent="⏸ Pause";}
   renderPlaylist();updateSourceBadge();
 }
 
 $("btnPlayPause").onclick=()=>{
   if(!activeVid){if(playlist.length)switchToIdx(0);return;}
-  if(activeVid.paused){activeVid.play().catch(()=>{});$("btnPlayPause").textContent="⏸ PAUSE";}
-  else{activeVid.pause();$("btnPlayPause").textContent="▶ PLAY";}
+  if(activeVid.paused){activeVid.play().catch(()=>{});$("btnPlayPause").textContent="⏸ Pause";}
+  else{activeVid.pause();$("btnPlayPause").textContent="▶ Play";}
 };
 $("btnNextVideo").onclick=()=>{
   if(!playlist.length)return;
   switchToIdx((currentIdx+1)%playlist.length);
-  activeVid?.play().catch(()=>{});$("btnPlayPause").textContent="⏸ PAUSE";
+  activeVid?.play().catch(()=>{});$("btnPlayPause").textContent="⏸ Pause";
 };
 $("btnPrevVideo").onclick=()=>{
   if(!playlist.length)return;
   switchToIdx((currentIdx-1+playlist.length)%playlist.length);
-  activeVid?.play().catch(()=>{});$("btnPlayPause").textContent="⏸ PAUSE";
+  activeVid?.play().catch(()=>{});$("btnPlayPause").textContent="⏸ Pause";
 };
 $("videoSeek").addEventListener("input",()=>{
   if(!activeVid||!isFinite(activeVid.duration))return;
@@ -199,9 +199,9 @@ function updateProgress(){
 
 function updateSourceBadge(){
   const b=$("sourceBadge");
-  if(source==="cam"){b.textContent="CÂMERA AO VIVO";b.style.color="var(--green)";}
-  else if(activeVid&&currentIdx>=0){b.textContent=playlist[currentIdx]?.name.toUpperCase().slice(0,32)||"ARQUIVO";b.style.color="var(--amber)";}
-  else{b.textContent="SEM FONTE";b.style.color="";}
+  if(source==="cam"){b.textContent="Live camera";b.style.color="var(--green)";}
+  else if(activeVid&&currentIdx>=0){b.textContent=playlist[currentIdx]?.name.toUpperCase().slice(0,32)||"Archive";b.style.color="var(--amber)";}
+  else{b.textContent="No source";b.style.color="";}
 }
 
 // ─── MIXER ────────────────────────────────────────────────────────────────────
@@ -244,13 +244,13 @@ function drawFrame() {
   }
 
   if($("showLiveTag").checked){
-    ctx.save();ctx.font="bold 18px monospace";const t="● AO VIVO",tw=ctx.measureText(t).width,px=12,py=6,x=W-tw-px*2-16,y=16;
+    ctx.save();ctx.font="bold 18px monospace";const t="● Live",tw=ctx.measureText(t).width,px=12,py=6,x=W-tw-px*2-16,y=16;
     ctx.fillStyle="rgba(210,30,30,0.92)";ctx.beginPath();ctx.roundRect(x,y,tw+px*2,24+py,3);ctx.fill();
     ctx.fillStyle="#fff";ctx.fillText(t,x+px,y+19);ctx.restore();
   }
 
   if($("showDateTime").checked){
-    const now=new Date(),str=now.toLocaleDateString("pt-BR")+" "+now.toLocaleTimeString("pt-BR",{hour12:false});
+    const now=new Date(),str=now.toLocaleDateString("en-US")+" "+now.toLocaleTimeString("en-US",{hour12:false});
     ctx.save();ctx.font="15px monospace";ctx.fillStyle="rgba(0,0,0,0.6)";ctx.fillRect(10,12,195,26);
     ctx.fillStyle="#00ff88";ctx.fillText(str,14,29);ctx.restore();
   }
@@ -270,7 +270,7 @@ function drawFrame() {
   }
 
   if($("tickerOn").checked){
-    const text=($("tickerText").value.trim()||"TELETOP")+"   ◆   ",speed=Number($("tickerSpeed").value)*1.1;
+    const text=($("tickerText").value.trim()||"This broadcasting station may be setting up right now. you can wait it be done. if you're setting it up, take your time :3")+"   ◆   ",speed=Number($("tickerSpeed").value)*1.1;
     tickerX-=speed;const bH=46,y0=H-bH;
     ctx.fillStyle="rgba(0,0,0,0.8)";ctx.fillRect(0,y0,W,bH);ctx.font="19px monospace";ctx.fillStyle="#ddd";
     const full=text+text,tw=ctx.measureText(full).width;
@@ -309,7 +309,7 @@ async function startPipeline() {
     const camAudioSrc=audioCtx.createMediaStreamSource(new MediaStream(camStream.getAudioTracks()));
     camAudioSrc.connect(micGainNode);micStreamSource=camAudioSrc;
   } else {
-    if(activeVid){wireVideoAudio(activeVid);activeVid.play().catch(()=>{});$("btnPlayPause").textContent="⏸ PAUSE";}
+    if(activeVid){wireVideoAudio(activeVid);activeVid.play().catch(()=>{});$("btnPlayPause").textContent="⏸ Pause";}
   }
   updateSourceBadge();
 
@@ -330,7 +330,7 @@ function stopPipeline(){
   if(rafId){cancelAnimationFrame(rafId);rafId=null;}
   closeAllPeers();
   if(activeVid)activeVid.pause();
-  $("btnPlayPause").textContent="▶ PLAY";
+  $("btnPlayPause").textContent="▶ Play";
   if(hiddenVid.srcObject){hiddenVid.srcObject.getTracks().forEach(t=>t.stop());hiddenVid.srcObject=null;}
   teardownAudio();outStream=null;
   rafId=requestAnimationFrame(drawFrame);
@@ -362,12 +362,12 @@ async function openPeer(viewerId){
 
 // ─── GO LIVE ──────────────────────────────────────────────────────────────────
 $("btnGoLive").onclick=async()=>{
-  const raw=$("channelId").value.trim()||"canal-"+Math.random().toString(36).slice(2,7);
+  const raw=$("channelId").value.trim()||"Channel-"+Math.random().toString(36).slice(2,7);
   $("channelId").value=raw;
   if(rafId){cancelAnimationFrame(rafId);rafId=null;}
-  try{await startPipeline();}catch(e){alert("Erro: "+e.message);rafId=requestAnimationFrame(drawFrame);return;}
+  try{await startPipeline();}catch(e){alert("Error: "+e.message);rafId=requestAnimationFrame(drawFrame);return;}
   socket.emit("broadcaster-register",raw,res=>{
-    if(!res?.ok){alert(res?.error||"Erro ao registrar canal.");stopPipeline();return;}
+    if(!res?.ok){alert(res?.error||"Error while registring channel.");stopPipeline();return;}
     channelId=res.channelId;live=true;setLiveUI(true);
     rafId=requestAnimationFrame(drawFrame);
   });
