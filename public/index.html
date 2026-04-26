@@ -1,20 +1,363 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TV WebRTC</title>
-  <style>
-    body { font-family: system-ui, sans-serif; background: #0c0f14; color: #e8edf5; padding: 2rem; max-width: 520px; margin: 0 auto; }
-    a { color: #2a9d8f; }
-    li { margin: 0.5rem 0; }
-  </style>
-</head>
-<body>
-  <h1>TV WebRTC</h1>
-  <ul>
-    <li><a href="/broadcaster/">Painel da emissora</a></li>
-    <li><a href="/client/">Cliente (TV)</a></li>
-  </ul>
-</body>
-</html>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+#page{
+  background:#1a1208;
+  color:#f0e6d3;
+  font-family:'Roboto Slab',serif;
+  font-size:15px;
+  line-height:1.75;
+}
+
+.hero{
+  position:relative;
+  height:300px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  padding-bottom:2.5rem;
+  background:#0e0b05;
+}
+canvas#waves{ position:absolute;top:0;left:0;width:100%;height:100%;display:block; }
+.hero-text{ position:relative;z-index:2;text-align:center; }
+.hero-text .eye{
+  font-family:'Roboto Mono',monospace;
+  font-size:9px;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:#c45e1a;
+  margin-bottom:6px;
+}
+.hero-text h1{
+  font-family:'Roboto Slab',serif;
+  font-size:3.2rem;
+  font-weight:700;
+  color:#f5dab8;
+  letter-spacing:0.06em;
+  line-height:1;
+}
+
+.orange-bar{
+  background:#c45e1a;
+  padding:0.9rem 3rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.orange-bar .left{
+  font-family:'Roboto Slab',serif;
+  font-size:1.05rem;
+  font-weight:500;
+  color:#1a1208;
+  line-height:1.3;
+}
+.orange-bar .right{
+  font-family:'Roboto Mono',monospace;
+  font-size:9px;
+  color:#3d1a07;
+  letter-spacing:0.12em;
+  text-align:right;
+  line-height:2;
+}
+
+.preamble{
+  background:#271a0a;
+  border-left:4px solid #c45e1a;
+  padding:1.5rem 3rem;
+  font-size:14.5px;
+  color:#c4a882;
+  line-height:1.9;
+  font-weight:300;
+  font-style:italic;
+}
+
+.doc-body{
+  max-width:800px;
+  margin:0 auto;
+  padding:3rem 2.5rem;
+}
+
+.article{
+  margin-bottom:2.5rem;
+  padding-bottom:2.5rem;
+  border-bottom:1px solid #2e1f0e;
+}
+.article:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+
+.art-num{
+  font-family:'Roboto Mono',monospace;
+  font-size:9px;
+  letter-spacing:0.28em;
+  text-transform:uppercase;
+  color:#c45e1a;
+  margin-bottom:3px;
+}
+.article h3{
+  font-family:'Roboto Slab',serif;
+  font-size:1.1rem;
+  font-weight:700;
+  color:#f5dab8;
+  margin-bottom:0.8rem;
+  padding-bottom:0.4rem;
+  border-bottom:1px solid #2e1f0e;
+}
+.article p{font-size:14px;color:#c4a882;margin-bottom:0.6rem;line-height:1.85;}
+.article ul{padding-left:1.3rem;margin-bottom:0.6rem;}
+.article ul li{font-size:14px;color:#c4a882;margin-bottom:0.25rem;line-height:1.7;}
+.article ul li::marker{color:#c45e1a;}
+strong{color:#f0d5b0;font-weight:500;}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:0 2.5rem;}
+@media(max-width:560px){.two-col{grid-template-columns:1fr;}}
+
+.inset{
+  background:#271a0a;
+  border-left:4px solid #e8721f;
+  padding:2rem 2.2rem;
+  margin-bottom:2.5rem;
+}
+.inset .art-num{color:#e8721f;}
+.inset h3{
+  font-size:1.05rem;
+  font-weight:700;
+  color:#f5dab8;
+  margin-bottom:0.8rem;
+  padding-bottom:0.4rem;
+  border-bottom:1px solid #3a2510;
+}
+.inset p{font-size:14px;color:#b09070;margin-bottom:0.6rem;line-height:1.85;}
+.inset em{color:#e0bb8a;}
+.inset strong{color:#f5dab8;}
+
+.apply-block{
+  border:1.5px solid #c45e1a;
+  padding:2rem 2.2rem;
+  background:#1e1108;
+}
+.apply-block .art-num{color:#c45e1a;}
+.apply-block h3{
+  font-size:1.05rem;
+  font-weight:700;
+  color:#f5dab8;
+  margin-bottom:0.8rem;
+  padding-bottom:0.4rem;
+  border-bottom:1px solid #2e1f0e;
+}
+.apply-block p{font-size:14px;color:#c4a882;line-height:1.85;margin-bottom:0.6rem;}
+.apply-block a{
+  display:inline-block;
+  margin-top:0.75rem;
+  background:#c45e1a;
+  color:#1a1208;
+  font-family:'Roboto Mono',monospace;
+  font-size:10px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  padding:11px 26px;
+  text-decoration:none;
+  font-weight:500;
+  transition:background .18s;
+}
+.apply-block a:hover{background:#e8721f;}
+
+.doc-footer{
+  background:#0e0b05;
+  border-top:1px solid #2e1f0e;
+  padding:1.25rem 3rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-family:'Roboto Mono',monospace;
+  font-size:9px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:#4a3020;
+}
+.doc-footer a{color:#c45e1a;text-decoration:none;}
+</style>
+
+<div id="page">
+
+<div class="hero">
+  <canvas id="waves"></canvas>
+  <div class="hero-text">
+    <div class="eye">Anchorage Broadcasting Network</div>
+    <h1>ABN</h1>
+  </div>
+</div>
+
+<div class="orange-bar">
+  <div class="left">Constitution of the Anchorage Broadcasting Network</div>
+  <div class="right">
+    Owner: The Orange Puppy (decemberty)<br>
+    Status: Active &amp; Binding<br>
+    anchoragebroadcasting@gmail.com
+  </div>
+</div>
+
+<div class="preamble">
+  The Anchorage Broadcasting Network (ABN) is an independent, external broadcasting system created to share, document, and expand the experience of the Minecraft world through media. It is designed to be free in expression, but structured in coordination — ensuring clarity without restricting creativity.
+</div>
+
+<div class="doc-body">
+
+  <div class="article">
+    <div class="art-num">Article I</div>
+    <h3>Identity &amp; Ownership</h3>
+    <p>ABN is a fully external network with no dependency on any Minecraft server. Ownership belongs to <strong>The Orange Puppy (decemberty)</strong>, who holds final authority over all rules, permissions, and exceptions. The Owner may act at any time without requiring consensus.</p>
+  </div>
+
+  <div class="article">
+    <div class="art-num">Article II</div>
+    <h3>Nature of the Network</h3>
+    <p>ABN operates manually and independently, without plugins, APIs, or mods. All broadcasts are recorded externally and produced by players. Any broadcasting service must maintain an in-game station for recording, presentation, and authenticity.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="article">
+      <div class="art-num">Article III</div>
+      <h3>Authorization to Broadcast</h3>
+      <p>Broadcasting requires approval. Only the following may request authorization:</p>
+      <ul>
+        <li>A Mayor</li>
+        <li>A Mayor-trusted individual</li>
+      </ul>
+      <p>Approval must be requested through the official form. Unauthorized broadcasting is not recognized by ABN.</p>
+    </div>
+    <div class="article">
+      <div class="art-num">Article IV</div>
+      <h3>Participation &amp; Identity</h3>
+      <p>Approved broadcasters may represent towns, cities, or nations. Each service must maintain a clear identity and avoid impersonation. Conflicting identities may be forced to change by the Owner.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="article">
+      <div class="art-num">Article V</div>
+      <h3>Credit Requirement</h3>
+      <p>Credit to ABN is required at the start and end of each broadcast session. Continuous or per-content credit is not required. Reused content must still credit original creators.</p>
+    </div>
+    <div class="article">
+      <div class="art-num">Article VI</div>
+      <h3>Advertising Regulations</h3>
+      <ul>
+        <li>Individual commercials must not exceed <strong>20 seconds</strong></li>
+        <li>Total ad time up to <strong>2 minutes</strong> per broadcast segment</li>
+        <li>Abuse of advertising space may lead to restriction</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="article">
+      <div class="art-num">Article VII</div>
+      <h3>Operational Time Windows</h3>
+      <p>Broadcasters are expected to remain active outside downtime windows (example: UTC 00:00–06:00). Exceptions apply for technical issues or Owner authorization.</p>
+    </div>
+    <div class="article">
+      <div class="art-num">Article VIII</div>
+      <h3>Freedom with Limits</h3>
+      <p><strong>Allowed:</strong> Roleplay, satire, opinion, free style and format.</p>
+      <p><strong>Not allowed:</strong> Fake global emergencies presented as real, structural disruption, or impersonation.</p>
+    </div>
+  </div>
+
+  <div class="inset">
+    <div class="art-num">Articles IX – XIII</div>
+    <h3>Channel 1 (CH1) &amp; Global Broadcasting</h3>
+    <p>CH1 is a dedicated global broadcast channel operated exclusively by The Orange Puppy (decemberty). It is not public and cannot be used directly by other broadcasters. Its purpose is to deliver global news and coordinate major announcements.</p>
+    <p>Broadcasting services are fully independent of CH1. If CH1 is offline, broadcasters may continue normal operations without restriction. CH1 does not control the activation, uptime, or permissions of other channels — it exists as a reference point, not a requirement.</p>
+    <p><strong>Redirection Protocol:</strong> Broadcasters may voluntarily redirect viewers to CH1 by displaying a blank screen for approximately 1 minute with the text: <em>"We now recommend you looking CH1 for Global News."</em></p>
+    <p>No broadcaster is obligated to redirect to CH1 or deliver global news independently. Independent global broadcasting requires explicit authorization from The Orange Puppy via Discord. Unauthorized global broadcasting may be treated as a rule violation depending on context.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="article">
+      <div class="art-num">Article XIV</div>
+      <h3>Network Structure</h3>
+      <p>The network consists of the Owner and Approved Broadcasters. There are no developers or analysts. Structure is minimal and directly managed.</p>
+    </div>
+    <div class="article">
+      <div class="art-num">Article XV</div>
+      <h3>Coexistence</h3>
+      <p>Broadcasters must avoid overwhelming shared space and constant interference with others. Competition is allowed; forced dominance is discouraged.</p>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="article">
+      <div class="art-num">Article XVI</div>
+      <h3>Enforcement</h3>
+      <p>Enforcement may include: warning, content removal, suspension, and full removal from the network. The Owner may override any enforcement action at any time.</p>
+    </div>
+    <div class="article">
+      <div class="art-num">Article XVII</div>
+      <h3>Amendments</h3>
+      <p>This Constitution may be modified at any time by The Orange Puppy (decemberty).</p>
+    </div>
+  </div>
+
+  <div class="article">
+    <div class="art-num">Article XIX</div>
+    <h3>Approval Confirmation Process</h3>
+    <p>Submission of the official form does not grant approval by itself. All applications must be reviewed and explicitly accepted. Approval is only valid after receiving written confirmation from <strong>anchoragebroadcasting@gmail.com</strong>. Until confirmation is received, the applicant is not approved and broadcasting under ABN is not authorized. Any broadcasting initiated before confirmation may be treated as unauthorized use of the network.</p>
+  </div>
+
+  <div class="article">
+    <div class="art-num">Article XX</div>
+    <h3>Blacklist &amp; Restrictions</h3>
+    <p>ABN maintains the right to blacklist entities that repeatedly violate its structure. Conditions include: repeated unauthorized broadcasting, persistent impersonation, abusive or disruptive behavior, or ignoring prior warnings.</p>
+    <p>Blacklisted entities may face permanent denial of approval, removal of content, and loss of network visibility. Decisions are made by The Orange Puppy and may be applied immediately in severe cases. Attempts to bypass blacklist status through alternative identities or rebranding will be treated as further violations.</p>
+  </div>
+
+  <div class="apply-block">
+    <div class="art-num">Authorization Form</div>
+    <h3>Apply to Broadcast</h3>
+    <p>Only Mayors and Mayor-trusted individuals may apply for authorization. Submit the official application via the link below. Your application will be reviewed manually — authorization is confirmed exclusively via email from anchoragebroadcasting@gmail.com. Do not begin broadcasting before receiving written confirmation.</p>
+    <a href="https://forms.gle/YGJXVvtt4GkvX2L66" target="_blank">Submit Official Application ↗</a>
+  </div>
+
+</div>
+
+<div class="doc-footer">
+  <span>Anchorage Broadcasting Network — Official Constitution</span>
+  <a href="mailto:anchoragebroadcasting@gmail.com">anchoragebroadcasting@gmail.com</a>
+</div>
+
+</div>
+
+<script>
+const canvas = document.getElementById('waves');
+const ctx = canvas.getContext('2d');
+function resize(){ canvas.width=canvas.offsetWidth; canvas.height=canvas.offsetHeight; }
+resize();
+window.addEventListener('resize',resize);
+const rings=[];let spawnT=0;
+function draw(){
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#0e0b05';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#1a1005';
+  ctx.beginPath();ctx.moveTo(0,H);ctx.lineTo(0,H*0.75);ctx.lineTo(W*0.06,H*0.58);ctx.lineTo(W*0.14,H*0.7);ctx.lineTo(W*0.24,H*0.44);ctx.lineTo(W*0.33,H*0.6);ctx.lineTo(W*0.45,H*0.36);ctx.lineTo(W*0.55,H*0.55);ctx.lineTo(W*0.66,H*0.43);ctx.lineTo(W*0.76,H*0.63);ctx.lineTo(W*0.88,H*0.49);ctx.lineTo(W,H*0.67);ctx.lineTo(W,H);ctx.closePath();ctx.fill();
+  const cx=W/2,tipY=24,baseY=H*0.74,maxR=Math.min(W*0.44,210);
+  for(let i=rings.length-1;i>=0;i--){const rg=rings[i];rg.r+=1.5;rg.a=0.72*(1-rg.r/maxR);if(rg.r>maxR||rg.a<=0){rings.splice(i,1);continue;}ctx.beginPath();ctx.arc(cx,tipY,rg.r,0,Math.PI*2);ctx.strokeStyle=`rgba(196,94,26,${rg.a.toFixed(3)})`;ctx.lineWidth=1.3;ctx.stroke();}
+  const bw=20;
+  ctx.strokeStyle='#7a3c10';ctx.lineWidth=1.8;
+  ctx.beginPath();ctx.moveTo(cx,tipY+18);ctx.lineTo(cx-bw,baseY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,tipY+18);ctx.lineTo(cx+bw,baseY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx-bw,baseY);ctx.lineTo(cx+bw,baseY);ctx.stroke();
+  ctx.lineWidth=0.9;ctx.strokeStyle='#5a2c0a';
+  for(let s=0;s<4;s++){const t0=s/4,t1=(s+1)/4,y0=(tipY+18)+(baseY-(tipY+18))*t0,y1=(tipY+18)+(baseY-(tipY+18))*t1,hw0=bw*t0+1,hw1=bw*t1+1;ctx.beginPath();ctx.moveTo(cx-hw0,y0);ctx.lineTo(cx+hw1,y1);ctx.stroke();ctx.beginPath();ctx.moveTo(cx+hw0,y0);ctx.lineTo(cx-hw1,y1);ctx.stroke();}
+  [0.28,0.54,0.78].forEach(t=>{const y=(tipY+18)+(baseY-(tipY+18))*t,hw=bw*t+2;ctx.lineWidth=1;ctx.strokeStyle='#6b3410';ctx.beginPath();ctx.moveTo(cx-hw,y);ctx.lineTo(cx+hw,y);ctx.stroke();});
+  ctx.strokeStyle='#c45e1a';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(cx,tipY+18);ctx.lineTo(cx,tipY);ctx.stroke();
+  const blink=Math.sin(Date.now()/500)>0;ctx.fillStyle=blink?'#ff5500':'#7a2200';ctx.beginPath();ctx.arc(cx,tipY,4,0,Math.PI*2);ctx.fill();
+  spawnT++;if(spawnT>52){rings.push({r:1,a:1});spawnT=0;}
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
